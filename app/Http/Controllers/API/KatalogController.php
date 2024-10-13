@@ -22,6 +22,7 @@ class KatalogController extends Controller
         }
         $data["detail_katalog"] = \App\Models\Katalog::with('detailKatalog')->get();
         $data["role"] = auth()->user()->role;
+        $data["user"] = auth()->user()->nama;
         return response([
             'status' => true,
             'message' => 'Data katalog tersedia',
