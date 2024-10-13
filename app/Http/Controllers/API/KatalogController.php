@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Katalog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -50,7 +51,7 @@ class KatalogController extends Controller
         $katalog->detail_penjual_id = $id_detail_penjual;
         $katalog->judul = $request->judul;
         $katalog->deskripsi = $request->deskripsi;
-        $katalog->metode_bayar = $request->metode_bayar;
+        // $katalog->metode_bayar = $request->metode_bayar;
         $katalog->save();
 
         $id_detail_katalog = DB::table('katalog')->where("detail_penjual_id", $id_detail_penjual)->orderBy("created_at", "desc")->pluck("id_katalog")->first();
@@ -152,5 +153,15 @@ class KatalogController extends Controller
             'status' => true,
             'message' => 'Delete katalog berhasil',
         ], 201);
+    }
+
+    public function lihatJasa($id){
+        $data['detail_katalog'] = Katalog::with('detailKatalog')->find($id);
+        $data['detail_penjual'] = Katalog::with('detailPenjual.user')->find($id);
+        return response([
+            'status' => true,
+            'message' => 'Data katalog tersedia',
+            'data' => $data
+        ]);
     }
 }

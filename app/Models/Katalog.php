@@ -21,6 +21,11 @@ class Katalog extends Model
 
     public function detailKatalog()
     {
-        return $this->belongsToMany(DetailKatalog::class, 'katalog', 'id_katalog', 'id_katalog', 'id_katalog', 'id_detail_katalog');
+        return $this->belongsToMany(DetailKatalog::class, 'katalog', 'id_katalog', 'id_katalog', 'id_katalog', 'katalog_id');
+    }
+
+    public function detailPenjual()
+    {
+        return $this->belongsTo(DetailPenjual::class, 'detail_penjual_id', 'id_detail_penjual');
     }
 }
