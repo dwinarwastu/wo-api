@@ -25,6 +25,7 @@ class KatalogController extends Controller
         foreach ($data["detail_katalog"] as $katalog){
             $data["user"] = \App\Models\DetailPenjual::where('id_detail_penjual', $katalog->detail_penjual_id)->first()->nama_toko;
         }
+        $data["user"] = auth()->user();
         return response([
             'status' => true,
             'message' => 'Data katalog tersedia',
@@ -161,9 +162,35 @@ class KatalogController extends Controller
     public function lihatJasa($id){
         $data['detail_katalog'] = Katalog::with('detailKatalog')->find($id);
         $data['detail_penjual'] = Katalog::with('detailPenjual.user')->find($id);
+        $data['role'] = auth()->user()->role;
+        $data['user'] = auth()->user();
+        
         return response([
             'status' => true,
             'message' => 'Data katalog tersedia',
+            'data' => $data
+        ]);
+    }
+
+    public function profile()
+    {
+        $data['profile'] = auth()->user();
+
+        return response([
+            'status' => true,
+            'message' => 'Data profile tersedia',
+            'data' => $data
+        ]);
+
+    }
+
+    public function account()
+    {
+        $data['account'] = auth()->user();
+
+        return response([
+            'status' => true,
+            'message' => 'Data account tersedia',
             'data' => $data
         ]);
     }

@@ -29,4 +29,6 @@ Route::get('katalog/edit/{id}', [App\Http\Controllers\API\KatalogController::cla
 Route::post('katalog/update/{id}', [App\Http\Controllers\API\KatalogController::class, 'update'])->middleware('auth:sanctum');
 Route::post('katalog/delete/{id}', [App\Http\Controllers\API\KatalogController::class, 'destroy'])->middleware('auth:sanctum');
 
-Route::get('lihat-jasa/{id}', [App\Http\Controllers\API\KatalogController::class, 'lihatJasa']);
+Route::get('lihat-jasa/{id}', [App\Http\Controllers\API\KatalogController::class, 'lihatJasa'])->middleware('auth:sanctum');
+Route::get('profile', [App\Http\Controllers\API\KatalogController::class, 'profile'])->middleware('auth:sanctum');
+Route::get('account', [App\Http\Controllers\API\KatalogController::class, 'account'])->middleware('auth:sanctum');
