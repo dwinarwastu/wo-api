@@ -6,22 +6,26 @@ use App\Http\Controllers\Controller;
 use App\Models\Katalog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class KatalogController extends Controller
 {
     public function index()
     {
+        Auth::shouldUse('sanctum');
+
         $data["kategori"] = \App\Models\Kategori::all();
         if (auth()->check()) {
-            $role = auth()->user()->role;
+            $data['role'] = auth()->user()->role;
             $user = auth()->user()->id_user;
-            if ($role == 1) {
+            if ($data['role'] == 1) {
                 $penjual = DB::table('detail_penjual')->where('user_id', $user)->first()->id_detail_penjual;
                 $data['penjual'] = \App\Models\Katalog::with('detailKatalog')->get()->where('detail_penjual_id', $penjual);
             }
+        }else{
+            $data['role'] = 'guest';
         }
         $data["detail_katalog"] = \App\Models\Katalog::with('detailKatalog')->get();
-        $data["role"] = auth()->user()->role;
         foreach ($data["detail_katalog"] as $katalog){
             $data["user"] = \App\Models\DetailPenjual::where('id_detail_penjual', $katalog->detail_penjual_id)->first()->nama_toko;
         }
@@ -160,11 +164,17 @@ class KatalogController extends Controller
     }
 
     public function lihatJasa($id){
+        Auth::shouldUse('sanctum');
+
         $data['detail_katalog'] = Katalog::with('detailKatalog')->find($id);
         $data['detail_penjual'] = Katalog::with('detailPenjual.user')->find($id);
-        $data['role'] = auth()->user()->role;
+        if(auth()->check()){
+            $data['role'] = auth()->user()->role;
+        }else{
+            $data['role'] = 'guest';
+        }
         $data['user'] = auth()->user();
-        
+
         return response([
             'status' => true,
             'message' => 'Data katalog tersedia',
