@@ -16,4 +16,9 @@ class DetailKatalog extends Model
         'harga',
         'gambar',
     ];
+
+    public function katalog()
+    {
+        return $this->hasOne(Katalog::class,'id_katalog','katalog_id');
+    }
 }

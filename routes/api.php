@@ -32,3 +32,5 @@ Route::post('katalog/delete/{id}', [App\Http\Controllers\API\KatalogController::
 Route::get('lihat-jasa/{id}', [App\Http\Controllers\API\KatalogController::class, 'lihatJasa']);
 Route::get('profile', [App\Http\Controllers\API\KatalogController::class, 'profile'])->middleware('auth:sanctum');
 Route::get('account', [App\Http\Controllers\API\KatalogController::class, 'account'])->middleware('auth:sanctum');
+
+Route::get('pesan/{id}', [App\Http\Controllers\API\KatalogController::class, 'pesan'])->middleware('auth:sanctum');

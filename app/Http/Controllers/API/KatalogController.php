@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\DetailKatalog;
 use App\Models\Katalog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -201,6 +202,19 @@ class KatalogController extends Controller
         return response([
             'status' => true,
             'message' => 'Data account tersedia',
+            'data' => $data
+        ]);
+    }
+
+    public function pesan($id)
+    {
+        $data['katalog'] = DetailKatalog::with('katalog')->where('katalog_id', $id)->get();
+        $data['detail_penjual'] = DetailKatalog::with('katalog.detailPenjual.user')->where('katalog_id', $id)->first();
+        $data['user'] = auth()->user();
+
+        return response([
+            'status' => true,
+            'message' => 'Data katalog tersedia',
             'data' => $data
         ]);
     }
