@@ -34,3 +34,5 @@ Route::get('profile', [App\Http\Controllers\API\KatalogController::class, 'profi
 Route::get('account', [App\Http\Controllers\API\KatalogController::class, 'account'])->middleware('auth:sanctum');
 
 Route::get('pesan/{id}', [App\Http\Controllers\API\KatalogController::class, 'pesan'])->middleware('auth:sanctum');
+
+Route::post('penyedia_jasa/store', [App\Http\Controllers\API\KatalogController::class, 'store_penyedia_jasa'])->middleware('auth:sanctum');

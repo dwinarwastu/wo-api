@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App;
 use App\Http\Controllers\Controller;
 use App\Models\DetailKatalog;
 use App\Models\Katalog;
@@ -28,7 +29,7 @@ class KatalogController extends Controller
         }
         $data["detail_katalog"] = \App\Models\Katalog::with('detailKatalog')->get();
         foreach ($data["detail_katalog"] as $katalog){
-            $data["user"] = \App\Models\DetailPenjual::where('id_detail_penjual', $katalog->detail_penjual_id)->first()->nama_toko;
+            $data["nama_toko"] = \App\Models\DetailPenjual::where('id_detail_penjual', $katalog->detail_penjual_id)->first()->nama_toko;
         }
         $data["user"] = auth()->user();
         return response([
@@ -217,5 +218,42 @@ class KatalogController extends Controller
             'message' => 'Data katalog tersedia',
             'data' => $data
         ]);
+    }
+
+    public function store_penyedia_jasa(Request $request){
+
+        $penyedia_jasa = new App\Models\DetailPenjual();
+        $penyedia_jasa->user_id = auth()->user()->id;
+        $penyedia_jasa->nama_toko = $request->nama_toko;
+        $penyedia_jasa->alamat = $request->alamat . " " . $request->kota . ", " . $request->provinsi;
+        $penyedia_jasa->kategori = $request->kategori;
+        $penyedia_jasa->bank = $request->bank;
+        $penyedia_jasa->no_rek = $request->no_rek;
+        if ($request->hasFile('fotoProfile')) {
+            $image = $request->file('fotoProfile');
+            $nama_image = $image->getClientOriginalName();
+            $fileNameWithoutExtension = pathinfo($nama_image, PATHINFO_FILENAME);
+            $fileName = $fileNameWithoutExtension.'.'.$image->getClientOriginalExtension();
+            $path = public_path('/images/penyedia_jasa/profile');
+            $image->move($path, $fileName);
+            $penyedia_jasa->profil_toko = $fileName;
+        }
+        if ($request->hasFile('fotoSampul')) {
+            $image = $request->file('fotoSampul');
+            $nama_image = $image->getClientOriginalName();
+            $fileNameWithoutExtension = pathinfo($nama_image, PATHINFO_FILENAME);
+            $fileName = $fileNameWithoutExtension.'.'.$image->getClientOriginalExtension();
+            $path = public_path('/images/penyedia_jasa/sampul');
+            $image->move($path, $fileName);
+            $penyedia_jasa->sampul_toko = $fileName;
+        }
+
+        dd($penyedia_jasa);
+        // $penyedia_jasa->save();
+
+        return response([
+            'status' => true,
+            'message' => 'Store penyedia jasa berhasil',
+        ], 201);
     }
 }
