@@ -221,9 +221,9 @@ class KatalogController extends Controller
     }
 
     public function store_penyedia_jasa(Request $request){
-
+        // dd(auth()->user()->id_user);
         $penyedia_jasa = new App\Models\DetailPenjual();
-        $penyedia_jasa->user_id = auth()->user()->id;
+        $penyedia_jasa->user_id = auth()->user()->id_user;
         $penyedia_jasa->nama_toko = $request->nama_toko;
         $penyedia_jasa->alamat = $request->alamat . " " . $request->kota . ", " . $request->provinsi;
         $penyedia_jasa->kategori = $request->kategori;
@@ -247,13 +247,41 @@ class KatalogController extends Controller
             $image->move($path, $fileName);
             $penyedia_jasa->sampul_toko = $fileName;
         }
+        // dd($penyedia_jasa);
+        $penyedia_jasa->save();
 
-        dd($penyedia_jasa);
-        // $penyedia_jasa->save();
+        $user_id = auth()->user()->id_user;
+        DB::update("UPDATE users SET ROLE = 1 WHERE id_user = $user_id");
 
         return response([
             'status' => true,
             'message' => 'Store penyedia jasa berhasil',
+        ], 201);
+    }
+
+    public function store_pesan(Request $request)
+    {
+        $transaksi = new App\Models\Transaksi();
+        $transaksi->user_id = $request->id_user;
+        $transaksi->katalog_id = $request->id_katalog;
+        $transaksi->tanggal = $request->tanggal;
+        $transaksi->save();
+
+        $transaksi_id = $transaksi->id_transaksi;
+
+        $detail_transaksi = new App\Models\DetailTransaksi();
+        $detail_transaksi->transaksi_id = $transaksi_id;
+        $detail_transaksi->ket = $request->keterangan;
+        $detail_transaksi->bukti_transfer_dp = '';
+        $detail_transaksi->bukti_tf_pelunasan = '';
+        $detail_transaksi->status_pembayaran = 1;
+        $detail_transaksi->save();
+
+        // dd($transaksi_id);
+
+        return response([
+            'status' => true,
+            'message' => 'Store pesan berhasil',
         ], 201);
     }
 }
