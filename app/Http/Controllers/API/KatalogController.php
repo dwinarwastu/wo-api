@@ -6,6 +6,7 @@ use App;
 use App\Http\Controllers\Controller;
 use App\Models\DetailKatalog;
 use App\Models\Katalog;
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -281,7 +282,29 @@ class KatalogController extends Controller
 
         return response([
             'status' => true,
-            'message' => 'Store pesan berhasil',
+            'message' => 'Store pesanan berhasil',
         ], 201);
+    }
+
+    public function data_pesan()
+    {
+        $data['data_pesan'] = Transaksi::with('user', 'katalog.detailPenjual', 'katalog.detailKatalog')->get();
+
+        return response([
+            'status' => true,
+            'message' => 'Data pesanan tersedia',
+            'data' => $data
+        ]);
+    }
+
+    public function status_pesan()
+    {
+        $data['status_pesan'] = Transaksi::with('katalog.detailKatalog')->get()->where('user_id', auth()->user()->id_user);
+
+        return response([
+            'status' => true,
+            'message' => 'Data status pesanan tersedia',
+            'data' => $data
+        ]);
     }
 }

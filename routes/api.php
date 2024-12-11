@@ -35,5 +35,7 @@ Route::get('account', [App\Http\Controllers\API\KatalogController::class, 'accou
 
 Route::get('pesan/{id}', [App\Http\Controllers\API\KatalogController::class, 'pesan'])->middleware('auth:sanctum');
 Route::post('pesan/store', [App\Http\Controllers\API\KatalogController::class, 'store_pesan'])->middleware('auth:sanctum');
+Route::get('pesan', [App\Http\Controllers\API\KatalogController::class, 'data_pesan'])->middleware('auth:sanctum');
+Route::get('pesan_status', [App\Http\Controllers\API\KatalogController::class, 'status_pesan'])->middleware('auth:sanctum');
 
 Route::post('penyedia_jasa/store', [App\Http\Controllers\API\KatalogController::class, 'store_penyedia_jasa'])->middleware('auth:sanctum');
